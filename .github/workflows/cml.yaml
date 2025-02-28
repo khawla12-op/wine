@@ -1,0 +1,21 @@
+name: model-wine-quality
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    container: python:3.9-slim
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Dependencies
+        run: |
+          apt-get update && apt-get install -y git
+          pip install -r requirements.txt
+
+      - name: Run Training
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python train.py
+          echo "MODEL METRICS"
+          cat metrics.txt
